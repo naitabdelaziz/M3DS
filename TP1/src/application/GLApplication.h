@@ -29,6 +29,8 @@ public:
   void initTriangleVAO();
   void initTexture();
   void initStrip(int nbSlice, float xmin, float xmax, float ymin, float ymax );
+  void initRing(int nbSlice,float r0,float r1);
+  void initializeColor(float R, float G, float B);
 
 private:
   std::vector<float> _trianglePosition;
