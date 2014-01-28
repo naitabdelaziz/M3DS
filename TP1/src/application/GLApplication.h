@@ -30,7 +30,6 @@ public:
   void initTexture();
   void initStrip(int nbSlice, float xmin, float xmax, float ymin, float ymax );
   void initRing(int nbSlice,float r0,float r1);
-  void initializeColor(float R, float G, float B);
 
 private:
   std::vector<float> _trianglePosition;
@@ -42,6 +41,8 @@ private:
   GLuint _triangleColorBuffer;
   GLuint _triangleTexCoordBuffer;
   GLuint _elementBuffer;
+  float _coeff;
+  bool _bool;
 
   GLuint _triangleVAO;
   GLuint _shader0;

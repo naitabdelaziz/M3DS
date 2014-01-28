@@ -16,9 +16,9 @@ GLApplication::GLApplication() {
     0.2,0.5,0.0,  // 3
     0.8,0.5,0.0,  // 4
     0.5,-0.5,0.0  // 5
-  };*/
+  };
 
-    /*_trianglePosition = {
+    _trianglePosition = {
         -0.8,-0.5,0.0, // vertex 0 anciennement vertex 0
         0.8,0.5,0.0,  // 1 anciennement 4
         -0.5,0.5,0.0,  // 2 anciennement 2
@@ -26,7 +26,7 @@ GLApplication::GLApplication() {
         -0.2,-0.5,0.0, // 3 anciennement 1
         0.5,-0.5,0.0,  // 4 anciennement 5
         0.2,0.5,0.0  // 5 anciennement 3
-    };*/
+    };
 
     _trianglePosition = {
         -0.5,-1,0.0,
@@ -39,7 +39,7 @@ GLApplication::GLApplication() {
         0.25,1,0.0
      };
 
-  /*  _triangleColor = {
+    _triangleColor = {
         0.3,0,0.6,1,
         0.3,0,0.6,1,
         0.0,0.9,0.0,1,
@@ -47,12 +47,26 @@ GLApplication::GLApplication() {
         0.0,0.5,0.6,1,
         0.0,0.5,0.6,1,
         0.9,0.0,0.0,1
-    };*/
+    };
     _triangleColor.clear();
     for(unsigned int i=0;i<_trianglePosition.size();++i) {
       _triangleColor.push_back(1);_triangleColor.push_back(0);_triangleColor.push_back(0);_triangleColor.push_back(1);
     }
-    _elementData = {0,3,2,2,1,4};
+    _elementData = {0,3,2,2,1,4};*/
+
+
+    _trianglePosition = {
+      -0.6,-0.8,0,
+      -0.6,0.8,0,
+      0.6,-0.8,0,
+      0.6,0.8,0
+    };
+    _triangleTexCoord = {
+      0,0,
+      0,1,
+      1,0,
+      1,1
+    };
 
 
 }
@@ -66,17 +80,14 @@ void GLApplication::initialize() {
     glLineWidth(2.0);
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 
-
     _shader0=initProgram("simple");
-
-
+    _bool = false;
+    _coeff = 0;
+    //initStrip(10, -0.5, 0.5, -1, 1);
+    //initRing(30,0.4,0.8);
     initTriangleBuffer();
     initTriangleVAO();
     initTexture();
-
-    //initStrip(4, -0.5, 0.5, -1, 1);
-
-
 
 }
 
@@ -93,8 +104,16 @@ void GLApplication::update() {
     // => mettre à jour les données de l'application
     // avant l'affichage de la prochaine image (animation)
     // ...
-
-
+    if(_bool){
+        _coeff += 0.01;
+        if(_coeff>=1)
+            _bool = !_bool;
+    } else {
+        _coeff -= 0.01;
+        if(_coeff<=0)
+            _bool = !_bool;
+     }
+    cout << _coeff << endl;
 }
 
 void GLApplication::initStrip(int nbSlice, float xmin, float xmax, float ymin, float ymax ){
@@ -102,6 +121,7 @@ void GLApplication::initStrip(int nbSlice, float xmin, float xmax, float ymin, f
     float size;
     size = xmax-xmin;
     _trianglePosition.clear();
+    _triangleColor.clear();
     for(n=0;n<nbSlice;n++){
 
         _trianglePosition.push_back((size/nbSlice)*n+xmin);
@@ -111,12 +131,60 @@ void GLApplication::initStrip(int nbSlice, float xmin, float xmax, float ymin, f
         _trianglePosition.push_back((size/nbSlice)*n+xmin);
         _trianglePosition.push_back(ymax);
         _trianglePosition.push_back(0);
+
+        _triangleColor.push_back(0);
+        _triangleColor.push_back((size/nbSlice*n));
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(1);
+
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(1-(size/nbSlice*n));
+        _triangleColor.push_back(1);
+
     }
+
     for (int i = 0 ; i < _trianglePosition.size(); i=i+3)
         cout << _trianglePosition[i] << " " << _trianglePosition[i+1] << " " << _trianglePosition[i+2] << endl;
     cout << _trianglePosition.size()/3 << " size " << endl;
 }
 
+void GLApplication::initRing(int nbSlice,float r0,float r1){
+    float pi = 3.14159;
+    float pas, size;
+
+    pas = (2*pi)/nbSlice;
+    size = r1-r0;
+    _trianglePosition.clear();
+    _triangleColor.clear();
+
+    for(int n=0;n<nbSlice+1;n++){
+
+        _trianglePosition.push_back(r0*cos(n*pas));
+        _trianglePosition.push_back(r0*sin(pas*n));
+        _trianglePosition.push_back(0);
+
+        _trianglePosition.push_back(r1*cos(n*pas));
+        _trianglePosition.push_back(r1*sin(pas*n));
+        _trianglePosition.push_back(0);
+
+        _triangleColor.push_back(0);
+        _triangleColor.push_back((size/nbSlice*n));
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(1);
+
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(1-(size/nbSlice*n));
+        _triangleColor.push_back(1);
+
+    }
+
+    for (int i = 0 ; i < _trianglePosition.size(); i=i+3)
+        cout << _trianglePosition[i] << " " << _trianglePosition[i+1] << " " << _trianglePosition[i+2] << endl;
+    cout << _trianglePosition.size()/3 << " size " << endl;
+
+}
 
 void GLApplication::draw() {
     // appelée après chaque update
@@ -125,10 +193,9 @@ void GLApplication::draw() {
 
     glUseProgram(_shader0);
     glBindVertexArray(_triangleVAO);
-    _triangleColor.clear();
-    for(unsigned int i=0;i<_trianglePosition.size();++i) {
-      _triangleColor.push_back(1);_triangleColor.push_back(0);_triangleColor.push_back(0);_triangleColor.push_back(1);
-    }
+
+    glUniform1f(glGetUniformLocation(_shader0,"coeff"),1);
+
     glDrawArrays(GL_TRIANGLE_STRIP,0,_trianglePosition.size()/3);
     //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 
@@ -179,8 +246,6 @@ GLuint GLApplication::initProgram(const std::string &filename) {
 
     glBindAttribLocation(program,0,"position");
     glBindAttribLocation(program,1,"couleur");
-
-
 
     glLinkProgram(program);
     return program;

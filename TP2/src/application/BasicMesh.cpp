@@ -108,11 +108,17 @@ void BasicMesh::initVAO() {
   glBindVertexArray(_vao);
   glBindBuffer(GL_ARRAY_BUFFER,_attributeBuffer);
 
+  glBindBuffer(GL_ARRAY_BUFFER,_trianglePositionBuffer);
+  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,0);
 
-  // TODO
+  glBindBuffer(GL_ARRAY_BUFFER,_attribute);
+  glVertexAttribPointer(3,6,GL_FLOAT,GL_FALSE,0,0);
 
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementBuffer);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_elementBuffer);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+
 
   glBindVertexArray(0);
 }
