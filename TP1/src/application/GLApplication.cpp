@@ -48,26 +48,30 @@ GLApplication::GLApplication() {
         0.0,0.5,0.6,1,
         0.9,0.0,0.0,1
     };
+    _elementData = {0,3,2,2,1,4};*/
+
+
+//    _trianglePosition = {
+//      -0.6,-0.8,0,
+//      -0.6,0.8,0,
+//      0.6,-0.8,0,
+//      0.6,0.8,0
+//    };
+//    _triangleTexCoord = {
+//        1,1,
+//        1,0,
+//        0,1,
+//        0,0
+//    };
+
+
+
     _triangleColor.clear();
     for(unsigned int i=0;i<_trianglePosition.size();++i) {
       _triangleColor.push_back(1);_triangleColor.push_back(0);_triangleColor.push_back(0);_triangleColor.push_back(1);
     }
-    _elementData = {0,3,2,2,1,4};*/
-
-
-    _trianglePosition = {
-      -0.6,-0.8,0,
-      -0.6,0.8,0,
-      0.6,-0.8,0,
-      0.6,0.8,0
-    };
-    _triangleTexCoord = {
-      0,0,
-      0,1,
-      1,0,
-      1,1
-    };
-
+    _bool = false;
+    _coeff = 0;
 
 }
 
@@ -81,10 +85,8 @@ void GLApplication::initialize() {
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
     _shader0=initProgram("simple");
-    _bool = false;
-    _coeff = 0;
     //initStrip(10, -0.5, 0.5, -1, 1);
-    //initRing(30,0.4,0.8);
+    initRing(30,0.4,0.8);
     initTriangleBuffer();
     initTriangleVAO();
     initTexture();
@@ -113,77 +115,6 @@ void GLApplication::update() {
         if(_coeff<=0)
             _bool = !_bool;
      }
-    cout << _coeff << endl;
-}
-
-void GLApplication::initStrip(int nbSlice, float xmin, float xmax, float ymin, float ymax ){
-    int n;
-    float size;
-    size = xmax-xmin;
-    _trianglePosition.clear();
-    _triangleColor.clear();
-    for(n=0;n<nbSlice;n++){
-
-        _trianglePosition.push_back((size/nbSlice)*n+xmin);
-        _trianglePosition.push_back(ymin);
-        _trianglePosition.push_back(0);
-
-        _trianglePosition.push_back((size/nbSlice)*n+xmin);
-        _trianglePosition.push_back(ymax);
-        _trianglePosition.push_back(0);
-
-        _triangleColor.push_back(0);
-        _triangleColor.push_back((size/nbSlice*n));
-        _triangleColor.push_back(0);
-        _triangleColor.push_back(1);
-
-        _triangleColor.push_back(0);
-        _triangleColor.push_back(0);
-        _triangleColor.push_back(1-(size/nbSlice*n));
-        _triangleColor.push_back(1);
-
-    }
-
-    for (int i = 0 ; i < _trianglePosition.size(); i=i+3)
-        cout << _trianglePosition[i] << " " << _trianglePosition[i+1] << " " << _trianglePosition[i+2] << endl;
-    cout << _trianglePosition.size()/3 << " size " << endl;
-}
-
-void GLApplication::initRing(int nbSlice,float r0,float r1){
-    float pi = 3.14159;
-    float pas, size;
-
-    pas = (2*pi)/nbSlice;
-    size = r1-r0;
-    _trianglePosition.clear();
-    _triangleColor.clear();
-
-    for(int n=0;n<nbSlice+1;n++){
-
-        _trianglePosition.push_back(r0*cos(n*pas));
-        _trianglePosition.push_back(r0*sin(pas*n));
-        _trianglePosition.push_back(0);
-
-        _trianglePosition.push_back(r1*cos(n*pas));
-        _trianglePosition.push_back(r1*sin(pas*n));
-        _trianglePosition.push_back(0);
-
-        _triangleColor.push_back(0);
-        _triangleColor.push_back((size/nbSlice*n));
-        _triangleColor.push_back(0);
-        _triangleColor.push_back(1);
-
-        _triangleColor.push_back(0);
-        _triangleColor.push_back(0);
-        _triangleColor.push_back(1-(size/nbSlice*n));
-        _triangleColor.push_back(1);
-
-    }
-
-    for (int i = 0 ; i < _trianglePosition.size(); i=i+3)
-        cout << _trianglePosition[i] << " " << _trianglePosition[i+1] << " " << _trianglePosition[i+2] << endl;
-    cout << _trianglePosition.size()/3 << " size " << endl;
-
 }
 
 void GLApplication::draw() {
@@ -194,7 +125,10 @@ void GLApplication::draw() {
     glUseProgram(_shader0);
     glBindVertexArray(_triangleVAO);
 
-    glUniform1f(glGetUniformLocation(_shader0,"coeff"),1);
+    glUniform1f(glGetUniformLocation(_shader0,"coeff"),1);// _coeff for animation rendering
+    glActiveTexture(GL_TEXTURE0); // on travaille avec l'unité de texture 0
+    glBindTexture(GL_TEXTURE_2D,_textureId); // l'unité de texture 0 correspond à la texture _textureId (image lagoon.jpg).
+    glUniform1f(glGetUniformLocation(_shader0,"texture"),0); // on affecte la valeur du sampler2D du fragment shader : c'est l'unité 0.
 
     glDrawArrays(GL_TRIANGLE_STRIP,0,_trianglePosition.size()/3);
     //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
@@ -286,7 +220,7 @@ void GLApplication::initTriangleBuffer() {
 
     glGenBuffers(1,&_triangleTexCoordBuffer);
     glBindBuffer(GL_ARRAY_BUFFER,_triangleTexCoordBuffer);
-    glBufferData(GL_ARRAY_BUFFER,_triangleTexCoord.size()*sizeof(unsigned int),_triangleTexCoord.data(),GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,_triangleTexCoord.size()*sizeof(float),_triangleTexCoord.data(),GL_STATIC_DRAW);
 
 }
 
@@ -302,7 +236,7 @@ void GLApplication::initTriangleVAO() {
     glVertexAttribPointer(1,4,GL_FLOAT,GL_FALSE,0,0);
 
     glBindBuffer(GL_ARRAY_BUFFER,_triangleTexCoordBuffer);
-    glVertexAttribPointer(2,2,GL_INT,GL_FALSE,0,0);
+    glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,0,0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementBuffer);
 
@@ -315,3 +249,82 @@ void GLApplication::initTriangleVAO() {
 
 
 
+
+void GLApplication::initStrip(int nbSlice, float xmin, float xmax, float ymin, float ymax ){
+    int n;
+    float size;
+    size = xmax-xmin;
+    _trianglePosition.clear();
+    _triangleColor.clear();
+    for(n=0;n<nbSlice;n++){
+
+        _trianglePosition.push_back((size/nbSlice)*n+xmin);
+        _trianglePosition.push_back(ymin);
+        _trianglePosition.push_back(0);
+
+        _trianglePosition.push_back((size/nbSlice)*n+xmin);
+        _trianglePosition.push_back(ymax);
+        _trianglePosition.push_back(0);
+
+        _triangleColor.push_back(0);
+        _triangleColor.push_back((size/nbSlice*n));
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(1);
+
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(1-(size/nbSlice*n));
+        _triangleColor.push_back(1);
+
+    }
+
+//    for (int i = 0 ; i < _trianglePosition.size(); i=i+3)
+//        cout << _trianglePosition[i] << " " << _trianglePosition[i+1] << " " << _trianglePosition[i+2] << endl;
+//    cout << _trianglePosition.size()/3 << " size " << endl;
+}
+
+void GLApplication::initRing(int nbSlice,float r0,float r1){
+    float pi = 3.14159;
+    float pas;
+
+    pas = (2*pi)/nbSlice;
+    _trianglePosition.clear();
+    _triangleColor.clear();
+
+    for(int n=0;n<nbSlice+1;n++){
+
+        _trianglePosition.push_back(r0*cos(n*pas));
+        _trianglePosition.push_back(r0*sin(pas*n));
+        _trianglePosition.push_back(0);
+
+        _trianglePosition.push_back(r1*cos(n*pas));
+        _trianglePosition.push_back(r1*sin(pas*n));
+        _trianglePosition.push_back(0);
+        //        _triangleColor.push_back(0);
+        //        _triangleColor.push_back(((float)n/(float)nbSlice));
+        //        _triangleColor.push_back(0);
+        //        _triangleColor.push_back(1);
+
+        //        _triangleColor.push_back(0);
+        //        _triangleColor.push_back(0);
+        //        _triangleColor.push_back(1-((float)n/(float)nbSlice));
+        //        _triangleColor.push_back(1);//
+
+        /** texture  **/
+        //        _triangleTexCoord.push_back(((float)n/(float)nbSlice));
+        //        _triangleTexCoord.push_back(0);
+        //        _triangleTexCoord.push_back(((float)n/(float)nbSlice));
+        //        _triangleTexCoord.push_back(1);
+        /** texture q24 **/
+        _triangleTexCoord.push_back(r0*cos(n*pas));
+        _triangleTexCoord.push_back(r0*sin(pas*n));
+        _triangleTexCoord.push_back(r1*cos(n*pas));
+        _triangleTexCoord.push_back(r1*sin(pas*n));
+
+    }
+
+//    for (int i = 0 ; i < _trianglePosition.size(); i=i+3)
+//        cout << _trianglePosition[i] << " " << _trianglePosition[i+1] << " " << _trianglePosition[i+2] << endl;
+//    cout << _trianglePosition.size()/3 << " size " << endl;
+
+}
