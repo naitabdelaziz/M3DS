@@ -78,7 +78,7 @@ void GLApplication::initialize() {
     glClearColor(1,1,1,1);
 
     glLineWidth(2.0);
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
     _shader0=initProgram("simple");
     _bool = false;
@@ -246,6 +246,7 @@ GLuint GLApplication::initProgram(const std::string &filename) {
 
     glBindAttribLocation(program,0,"position");
     glBindAttribLocation(program,1,"couleur");
+    glBindAttribLocation(program,2,"texCoord");
 
     glLinkProgram(program);
     return program;
@@ -283,6 +284,10 @@ void GLApplication::initTriangleBuffer() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_elementBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,_elementData.size()*sizeof(unsigned int),_elementData.data(),GL_STATIC_DRAW);
 
+    glGenBuffers(1,&_triangleTexCoordBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER,_triangleTexCoordBuffer);
+    glBufferData(GL_ARRAY_BUFFER,_triangleTexCoord.size()*sizeof(unsigned int),_triangleTexCoord.data(),GL_STATIC_DRAW);
+
 }
 
 
@@ -296,10 +301,14 @@ void GLApplication::initTriangleVAO() {
     glBindBuffer(GL_ARRAY_BUFFER,_triangleColorBuffer);
     glVertexAttribPointer(1,4,GL_FLOAT,GL_FALSE,0,0);
 
+    glBindBuffer(GL_ARRAY_BUFFER,_triangleTexCoordBuffer);
+    glVertexAttribPointer(2,2,GL_INT,GL_FALSE,0,0);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementBuffer);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);
 }

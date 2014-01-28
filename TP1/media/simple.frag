@@ -1,10 +1,9 @@
 #version 130
 
 in vec4 fColor;
-in vec2 texCoord;
+in vec2 fTexCoord;
 
 out vec4 fragColor;
-out vec2 fTexCoord;
         
 void main() {
     fragColor=fColor;
