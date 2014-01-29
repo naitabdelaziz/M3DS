@@ -125,7 +125,7 @@ void GLApplication::draw() {
     glUseProgram(_shader0);
     glBindVertexArray(_triangleVAO);
 
-    glUniform1f(glGetUniformLocation(_shader0,"coeff"),1);// _coeff for animation rendering
+    glUniform1f(glGetUniformLocation(_shader0,"coeff"),_coeff);// _coeff for animation rendering
     glActiveTexture(GL_TEXTURE0); // on travaille avec l'unité de texture 0
     glBindTexture(GL_TEXTURE_2D,_textureId); // l'unité de texture 0 correspond à la texture _textureId (image lagoon.jpg).
     glUniform1f(glGetUniformLocation(_shader0,"texture"),0); // on affecte la valeur du sampler2D du fragment shader : c'est l'unité 0.
@@ -290,6 +290,7 @@ void GLApplication::initRing(int nbSlice,float r0,float r1){
     pas = (2*pi)/nbSlice;
     _trianglePosition.clear();
     _triangleColor.clear();
+    _triangleTexCoord.clear();
 
     for(int n=0;n<nbSlice+1;n++){
 
@@ -300,21 +301,23 @@ void GLApplication::initRing(int nbSlice,float r0,float r1){
         _trianglePosition.push_back(r1*cos(n*pas));
         _trianglePosition.push_back(r1*sin(pas*n));
         _trianglePosition.push_back(0);
-        //        _triangleColor.push_back(0);
-        //        _triangleColor.push_back(((float)n/(float)nbSlice));
-        //        _triangleColor.push_back(0);
-        //        _triangleColor.push_back(1);
 
-        //        _triangleColor.push_back(0);
-        //        _triangleColor.push_back(0);
-        //        _triangleColor.push_back(1-((float)n/(float)nbSlice));
-        //        _triangleColor.push_back(1);//
+        /** Color **/
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(((float)n/(float)nbSlice));
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(1);
+
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(0);
+        _triangleColor.push_back(1-((float)n/(float)nbSlice));
+        _triangleColor.push_back(1);//
 
         /** texture  **/
-        //        _triangleTexCoord.push_back(((float)n/(float)nbSlice));
-        //        _triangleTexCoord.push_back(0);
-        //        _triangleTexCoord.push_back(((float)n/(float)nbSlice));
-        //        _triangleTexCoord.push_back(1);
+//        _triangleTexCoord.push_back(((float)n/(float)nbSlice));
+//        _triangleTexCoord.push_back(0);
+//        _triangleTexCoord.push_back(((float)n/(float)nbSlice));
+//        _triangleTexCoord.push_back(1);
         /** texture q24 **/
         _triangleTexCoord.push_back(((r0*cos(n*pas))+1)/2);
         _triangleTexCoord.push_back(1-((r0*sin(n*pas))+1)/2);
