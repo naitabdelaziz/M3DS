@@ -28,7 +28,15 @@ void BasicMesh::updateBuffer() {
 
 void BasicMesh::initTetrahedron() {
     std::vector<float> position={
+        -10,0,2, // 0
+        10,0,2,  // 1
+        0,10,-1,  // 2
         -10,0,-10, // 0
+        0,10,-20,  // 2
+        0,-10,-20,  // 3
+        -10,0,-10, // 0
+        10,0,-10,  // 1
+        0,-10,-20,  // 3
         10,0,-10,  // 1
         0,10,-20,  // 2
         0,-10,-20  // 3
@@ -36,13 +44,21 @@ void BasicMesh::initTetrahedron() {
 
     std::vector<float> color={
         1,0,0,
+        1,0,0,
+        1,0,0,
+        0,1,0,
+        0,1,0,
         0,1,0,
         0,0,1,
+        0,0,1,
+        0,0,1,
+        0,1,1,
+        0,1,1,
         0,1,1
     };
 
     _element={
-        0,1,2,0,2,3,0,1,3,1,2,3
+        0,1,2,3,4,5,6,7,8,9,10,11
     };
 
 
@@ -109,10 +125,10 @@ void BasicMesh::initVAO() {
     glBindBuffer(GL_ARRAY_BUFFER,_attributeBuffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, _attributeBuffer);
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,0);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(float)*6,0);
 
     glBindBuffer(GL_ARRAY_BUFFER, _attributeBuffer);
-    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,0);
+    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(float)*6,(void*)(3*sizeof(float)));
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_elementBuffer);
 
