@@ -16,9 +16,11 @@ GLApplication::GLApplication() {
 
     _angle=0.0;
 
-
-
-
+    // _projection de classe Matrix4 déclarée dans GLApplication.h
+    _projection.setOrtho(-20,20,-20,20,5,100); // cf calcul de la matrice dans le cours
+    _projection.setOrtho(-18,22,-10,30,5,100);
+    _projection.setOrtho(-5,2,-10,10,5,100);
+    _projection.setOrtho(-20,20,-20,20,5,100);
 
 }
 
@@ -39,8 +41,8 @@ void GLApplication::initialize() {
     _shader.read("openGL3D");
 
     glEnable(GL_DEPTH_TEST); // chaque fragment source subit le test du depth buffer
-    glDepthFunc(GL_GREATER);  // le test passe si depth(source) < depth(destination)
-    glClearDepth(0.2); // valeur d'initialisation du depth destination de tous les pixels lors d'un glClear
+    glDepthFunc(GL_LESS);  // le test passe si depth(source) < depth(destination)
+    glClearDepth(1.0); // valeur d'initialisation du depth destination de tous les pixels lors d'un glClear
 
 
 
@@ -78,7 +80,8 @@ void GLApplication::draw() {
 
 
     glUseProgram(_shader.id());
-
+    _shader.uniform("projection",_projection); // utilisation de la classe shader
+    _shader.uniform("transform",_transform); // utilisation de la classe shader
     _meshGL.draw();
     glUseProgram(0);
 

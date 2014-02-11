@@ -28,9 +28,9 @@ void BasicMesh::updateBuffer() {
 
 void BasicMesh::initTetrahedron() {
     std::vector<float> position={
-        -10,0,2, // 0
-        10,0,2,  // 1
-        0,10,-1,  // 2
+        -10,0,-10, // 0
+        10,0,-10,  // 1
+        0,10,-20,  // 2
         -10,0,-10, // 0
         0,10,-20,  // 2
         0,-10,-20,  // 3
@@ -69,10 +69,9 @@ void BasicMesh::initTetrahedron() {
     _attribute.clear();
     for(unsigned int i=0;i<position.size()/3;++i) {
 
-        _attribute.push_back(position[i*3+0]*0.09); // *0.09 pour être visible entre [-0.9,0.9]
-        _attribute.push_back(position[i*3+1]*0.09);
-        _attribute.push_back(position[i*3+2]*0.09+1.0);
-
+        _attribute.push_back(position[i*3+0]);
+        _attribute.push_back(position[i*3+1]);
+        _attribute.push_back(position[i*3+2]);
 
 
         _attribute.push_back(color[i*3+0]);
