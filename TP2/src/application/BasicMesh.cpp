@@ -94,6 +94,17 @@ void BasicMesh::initObj(const ObjLoader &obj) {
 
         // TODO
 
+
+        _attribute.push_back(obj.position(i).x());
+        _attribute.push_back(obj.position(i).y());
+        _attribute.push_back(obj.position(i).z());
+
+
+        _attribute.push_back((obj.normal(i).x()+1.0)/2.0);
+        _attribute.push_back((obj.normal(i).y()+1.0)/2.0);
+        _attribute.push_back((obj.normal(i).z()+1.0)/2.0);
+
+
     }
 
     // initialisation de _element (i.e. indices des triangles pour glDrawElements) :
@@ -102,7 +113,9 @@ void BasicMesh::initObj(const ObjLoader &obj) {
     for(unsigned int i=0;i<obj.nbFace();i++) {
 
         // TODO
-
+        _element.push_back(obj.indexVertex(i,0));
+        _element.push_back(obj.indexVertex(i,1));
+        _element.push_back(obj.indexVertex(i,2));
     }
 }
 

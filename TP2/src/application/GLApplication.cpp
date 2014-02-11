@@ -4,7 +4,7 @@
 
 using namespace std;
 using namespace p3d;
-
+// note pour eclairage de la vache : N=-N; intensity=max(slot(L,N),0.0);
 GLApplication::~GLApplication() {
 }
 
@@ -20,8 +20,11 @@ GLApplication::GLApplication() {
     _projection.setOrtho(-20,20,-20,20,5,100); // cf calcul de la matrice dans le cours
     _projection.setOrtho(-18,22,-10,30,5,100);
     _projection.setOrtho(-5,2,-10,10,5,100);
-    _projection.setOrtho(-20,20,-20,20,5,100);
+    _projection.setOrtho(-20,20,-20,20,4,100);
 
+     // _obj déjà déclaré en ObjLoader
+    _obj.readInit("cube.obj",Vector3(-10,-10,-20),Vector3(10,10,-10)); // reporte l'objet dans la boite d'extémités (-10,-10,-20) et (10,10,-10)
+    _meshGL.initObj(_obj); // initialisation des sommets du tétrahèdre substitué avec l'initialisation de _obj
 }
 
 
