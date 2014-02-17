@@ -99,10 +99,9 @@ void BasicMesh::initObj(const ObjLoader &obj) {
         _attribute.push_back(obj.position(i).y());
         _attribute.push_back(obj.position(i).z());
 
-
-        _attribute.push_back((obj.normal(i).x()+1.0)/2.0);
-        _attribute.push_back((obj.normal(i).y()+1.0)/2.0);
-        _attribute.push_back((obj.normal(i).z()+1.0)/2.0);
+        _attribute.push_back(obj.normal(i).x());
+        _attribute.push_back(obj.normal(i).y());
+        _attribute.push_back(obj.normal(i).z());
 
 
     }

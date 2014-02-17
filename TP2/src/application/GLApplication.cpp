@@ -4,7 +4,7 @@
 
 using namespace std;
 using namespace p3d;
-// note pour eclairage de la vache : N=-N; intensity=max(slot(L,N),0.0);
+
 GLApplication::~GLApplication() {
 }
 
@@ -23,7 +23,7 @@ GLApplication::GLApplication() {
     _projection.setOrtho(-20,20,-20,20,4,100);
 
      // _obj déjà déclaré en ObjLoader
-    _obj.readInit("cube.obj",Vector3(-10,-10,-20),Vector3(10,10,-10)); // reporte l'objet dans la boite d'extémités (-10,-10,-20) et (10,10,-10)
+    _obj.readInit("cow.obj",Vector3(-10,-10,-20),Vector3(10,10,-10)); // reporte l'objet dans la boite d'extémités (-10,-10,-20) et (10,10,-10)
     _meshGL.initObj(_obj); // initialisation des sommets du tétrahèdre substitué avec l'initialisation de _obj
 }
 
@@ -40,7 +40,7 @@ void GLApplication::initialize() {
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
     _shader.attribute("position",0);
-    _shader.attribute("color",1);
+    _shader.attribute("normal",1);
     _shader.read("openGL3D");
 
     glEnable(GL_DEPTH_TEST); // chaque fragment source subit le test du depth buffer
@@ -85,6 +85,8 @@ void GLApplication::draw() {
     glUseProgram(_shader.id());
     _shader.uniform("projection",_projection); // utilisation de la classe shader
     _shader.uniform("transform",_transform); // utilisation de la classe shader
+    _shader.uniform("lightPosition", _lightPosition);
+    _shader.uniform("diffuseColor", Vector3(0.2,0.8,0.2));
     _meshGL.draw();
     glUseProgram(0);
 
