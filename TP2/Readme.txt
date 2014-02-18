@@ -1,8 +1,6 @@
-Douaille Erwan
+﻿Douaille Erwan
 Francois Remy
 
-Doit contenir :
-- ce que vous avez fait.
-- ce que vous n'avez pas fait (et pourquoi).
-- difficultés rencontrées.
-- commentaires éventuels sur le TP (points à éclaircir, longueur du sujet, etc). 
+Nous avons fait tout le TP. On s'est essaye a la question bonus, mais on a pas reussis 
+a faire en sorte que la vache tourne tout en gardant l'eclairement correct. 
+C'est justement sur la partie concernant l'eclairement que l'on a pas trop bien compris comment cela fonctionnait.
