@@ -157,8 +157,8 @@ void GLApplication::updateCamera() {
     case Camera_Car_Setup:
       if (mouseLeft()) {
         _camera.lookAt(_car.position());
-        Vector3 t=_camera.pointTo(Coordinate_Local,_car.position());
-        Vector3 vertical=_camera.directionTo(Coordinate_Local,Vector3(0,1,0));
+        Vector3 t=_cameraStop.pointTo(Coordinate_Local,_car.position());
+        Vector3 vertical=_cameraStop.directionTo(Coordinate_Local,Vector3(0,1,0));
         _camera.translate(t,Coordinate_Local);
         _camera.rotate(-deltaMouseX(),vertical,Coordinate_Local);
         _camera.rotate(deltaMouseY(),Vector3(1,0,0),Coordinate_Local);
@@ -166,15 +166,29 @@ void GLApplication::updateCamera() {
       }
       break;
     case Camera_Follow_Car: {
+      _cameraStop.position(_car.position());
+      _cameraStop.orientation(_car.orientation());
+
+//        _camera.translate(0,0,-3);
+
+      _cameraStop.position(_cameraStop.position()+_cameraStop.orientation()*Vector3(0,8,10));
+      _cameraStop.rotate(-30,Vector3(1,0,0));
+        _camera.position(_cameraStart.position()+(_cameraStop.position()-_cameraStart.position())*_lambda);
+        _camera.orientation(_cameraStart.orientation()+(_cameraStop.orientation()+(-1)*_cameraStart.orientation())*_lambda);
 
       }
       break;
     case Camera_Follow_Plane: {
 
-        _camera.position(_airplane.position());
-        _camera.orientation(180,Vector3(0,1,0));
-        _camera.translate(0,1,-3);
+        _cameraStop.position(_airplane.position());
+        _cameraStop.orientation(_airplane.orientation());
 
+//        _camera.translate(0,0,-3);
+
+        _cameraStop.position(_cameraStop.position()+_cameraStop.orientation()*Vector3(0,0,-4));
+         _cameraStop.rotate(180, Vector3(0,1,0));
+         _camera.position(_cameraStart.position()+(_cameraStop.position()-_cameraStart.position())*_lambda);
+          _camera.orientation(_cameraStart.orientation()+(_cameraStop.orientation()+(-1)*_cameraStart.orientation())*_lambda);
 
       }
       break;

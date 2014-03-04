@@ -125,13 +125,10 @@ void Car::drawWorld() {
 void Car::move() {
   _acceleration+=-_velocity/50;
   _velocity+=_acceleration;
-  _rotateWheel+=_velocity*10;
+  _rotateWheel+=_velocity*40*0.2;
   _steering-=_steering/10*fabs(_velocity);
-  // TODO here
-  _position = _position + _velocity;
   _orientation.rotate(_steering*_velocity/(1.0+fabs(_velocity)),Vector3(0,1,0)); // le /100 est déterminé par essai/erreur
-
-
+  _position.add(_orientation*Vector3(0,0,-1)*_velocity*0.2);
 }
 
 
