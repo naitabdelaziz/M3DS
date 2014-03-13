@@ -50,7 +50,9 @@ Vector3 FaceBSP::intersection(const Vector3 &p1,const Vector3 &p2) const {
     float numerateur=normal().dot(point(1)-p1);
     float denominateur=normal().dot(p2-p1);
     float u=numerateur/denominateur;
+    if (u > -57 && u < 57)
     res=u*(p2-p1)+p1;
+
 
 
     return res;
@@ -73,28 +75,31 @@ void FaceBSP::separe(const FaceBSP &f) {
     vector<VertexBSP *> vertexPositive;
     vertexNegative.clear();
     vertexPositive.clear();
-
-    for (int i = 0; i < _tabVertex.size(); ++i) {
-        if(this->sign(f._tabVertex[i]->point())==SIGN_PLUS)
-            vertexPositive.push_back(f._tabVertex[i]);
-        else
-            vertexNegative.push_back(f._tabVertex[i]);
+    ESign signe=f.sign(_tabVertex[0]->point());
+    if(signe!=f.sign(_tabVertex[_tabVertex.size()-1]->point())){
+        VertexBSP *inter=createVertex(f.intersection(_tabVertex[_tabVertex.size()-1]->point(),_tabVertex[0]->point()));
+        inter->interpolateNormal(*_tabVertex[_tabVertex.size()-1],*_tabVertex[0]);
+        vertexNegative.push_back(inter);
+        vertexPositive.push_back(inter);
     }
-    for (int i = 0; i < _tabVertex.size(); ++i) {
-        if(this->sign(f._tabVertex[i]->point())==SIGN_PLUS)
-            vertexPositive.push_back(f._tabVertex[i]);
+    if(signe==SIGN_PLUS)
+        vertexPositive.push_back(_tabVertex[0]);
+    else
+        vertexNegative.push_back(_tabVertex[0]);
+    for (int i = 1; i < _tabVertex.size(); ++i) {
+        if(signe!=f.sign(_tabVertex[i]->point())){
+            VertexBSP *inter=createVertex(f.intersection(_tabVertex[i-1]->point(),_tabVertex[i]->point()));
+                 inter->interpolateNormal(*_tabVertex[i-1],*_tabVertex[i]);
+            vertexNegative.push_back(inter);
+            vertexPositive.push_back(inter);
+        }
+        signe=f.sign(_tabVertex[i]->point());
+        if(signe==SIGN_PLUS)
+            vertexPositive.push_back(_tabVertex[i]);
         else
-            vertexNegative.push_back(f._tabVertex[i]);
+            vertexNegative.push_back(_tabVertex[i]);
     }
 
-    Vector3 a = f.intersection(vertexNegative[0]->point(), vertexPositive[0]->point());
-    Vector3 b = f.intersection(vertexNegative[1]->point(), vertexPositive[1]->point());
-
-    VertexBSP* ap = createVertex(a);
-    VertexBSP* bp = createVertex(b);
-
-    vertexPositive.push_back(ap);
-    vertexPositive.push_back(bp);
     // TODO : à compléter
 
 
