@@ -20,10 +20,14 @@ Vector3 Curve::evalBezier(double t) {
     Vector3 result;
     if (nbPoint()>1) {
         vector<Vector3> castel=_pts;      // tableau de points sur lesquels on applique deCasteljau
-                                          // on recopie les points de controles dans le tableau castel (castel est donc initialisé avec la première ligne de l'algo triangulaire).
+        // on recopie les points de controles dans le tableau castel (castel est donc initialisé avec la première ligne de l'algo triangulaire).
 
         // A COMPLETER : appliquer la méthode de De Casteljau
-
+        for (int i = 0; i < castel.size()-1; i++) {
+            for (int j = 0; j < castel.size()-i; j++) {
+                castel[j] = (t*castel[j+1]) + ((1-t)*castel[j]);
+            }
+        }
 
         // le point de la courbe doit se trouver dans castel[0] à la fin de l'algo
         result=castel[0];
@@ -55,21 +59,21 @@ Vector3 Curve::evalCubicBezier(double t) {
 }
 
 Vector3 Curve::evalCubicVelocity(double t) {
-  if (_pts.size()!=4) throw Error("Curve should have 4 control points",__LINE__,__FILE__);
-  Vector3 res;
+    if (_pts.size()!=4) throw Error("Curve should have 4 control points",__LINE__,__FILE__);
+    Vector3 res;
 
 
-  return res;
+    return res;
 
 }
 
 Vector3 Curve::evalCubicAcceleration(double t) {
-  if (_pts.size()!=4) throw Error("Curve should have 4 control points",__LINE__,__FILE__);
+    if (_pts.size()!=4) throw Error("Curve should have 4 control points",__LINE__,__FILE__);
 
-  Vector3 res;
+    Vector3 res;
 
 
-  return res;
+    return res;
 
 }
 
@@ -87,7 +91,7 @@ Curve::~Curve() {
 
 
 void Curve::create(int nb) {
-  _pts.resize(nb);
+    _pts.resize(nb);
 }
 
 void Curve::point(int i,const Vector3 &p) {
@@ -96,72 +100,72 @@ void Curve::point(int i,const Vector3 &p) {
 
 
 Matrix4 Curve::frame(double t,const p3d::Vector3 &oldAcc,const p3d::Vector3 &newAcc,p3d::Vector3 *oldB,bool *flip) {
-  Vector3 p=evalCubicBezier(t);
+    Vector3 p=evalCubicBezier(t);
 
-  Vector3 tt=evalCubicVelocity(t);
-  Vector3 acc;
-  acc.interpolateDirection(oldAcc,newAcc,t);
+    Vector3 tt=evalCubicVelocity(t);
+    Vector3 acc;
+    acc.interpolateDirection(oldAcc,newAcc,t);
 
-  Vector3 b=tt.cross(acc);
-  if (b.length()<0.000001) {
+    Vector3 b=tt.cross(acc);
+    if (b.length()<0.000001) {
+        if (flip) {
+            b=*oldB;
+        }
+        else {
+            b=Vector3(0,1,0);
+        }
+    }
+    tt.normalize();
+    b.normalize();
     if (flip) {
-      b=*oldB;
+        if (*flip) b=-b;
+        if (fabs(b.dot(*oldB)+1)<0.1) {
+            *flip=!*flip;
+            b=-b;
+        }
+        *oldB=b;
     }
-    else {
-      b=Vector3(0,1,0);
-    }
-  }
-  tt.normalize();
-  b.normalize();
-  if (flip) {
-    if (*flip) b=-b;
-    if (fabs(b.dot(*oldB)+1)<0.1) {
-      *flip=!*flip;
-      b=-b;
-    }
-    *oldB=b;
-  }
-  Vector3 n=cross(b,tt);
+    Vector3 n=cross(b,tt);
 
-  Matrix4 res;
-  res.set(p,tt,b,n);
+    Matrix4 res;
+    res.set(p,tt,b,n);
 
-  return res;
+    return res;
 }
 
 
 Matrix4 Curve::tbn(double t,p3d::Vector3 *oldB,bool *flip) {
-  Vector3 p=evalCubicBezier(t);
+    Vector3 p=evalCubicBezier(t);
 
 
-  Vector3 tt=evalCubicVelocity(t);
-  Vector3 acc=evalCubicAcceleration(t);
+    Vector3 tt=evalCubicVelocity(t);
+    Vector3 acc=evalCubicAcceleration(t);
 
-  Vector3 b=tt.cross(acc);
-  if (b.length()<0.000001) {
+    Vector3 b=tt.cross(acc);
+    if (b.length()<0.000001) {
+        if (flip) {
+            b=*oldB;
+        }
+        else {
+            b=Vector3(0,0,1);
+        }
+    }
+    tt.normalize();
+    b.normalize();
     if (flip) {
-      b=*oldB;
+        if (*flip) b=-b;
+        if (fabs(b.dot(*oldB)+1)<0.00001) {
+            *flip=!*flip;
+            b=-b;
+        }
+        *oldB=b;
     }
-    else {
-      b=Vector3(0,0,1);
-    }
-  }
-  tt.normalize();
-  b.normalize();
-  if (flip) {
-    if (*flip) b=-b;
-    if (fabs(b.dot(*oldB)+1)<0.00001) {
-      *flip=!*flip;
-      b=-b;
-    }
-    *oldB=b;
-  }
-  Vector3 n=cross(b,tt);
+    Vector3 n=cross(b,tt);
 
-  Matrix4 res;
-  res.set(p,tt,b,n);
+    Matrix4 res;
+    res.set(p,tt,b,n);
 
-  return res;
+    return res;
 }
 
 void Curve::drawBezier() {
@@ -179,33 +183,23 @@ void Curve::drawBezier() {
 
 
 void Curve::drawControl() {
-  vector<Vector3> linePts;
-  glPointSize(10);
-  p3d::shaderVertexAmbient();
-  if (nbPoint()>0) {
-    unsigned int i;
-    for(i=0;i<nbPoint();++i) {
-      linePts.push_back(point(i));
-      p3d::draw(i,point(i)+Vector3(0.01,0.01,0));
+    vector<Vector3> linePts;
+    glPointSize(10);
+    p3d::shaderVertexAmbient();
+    if (nbPoint()>0) {
+        unsigned int i;
+        for(i=0;i<nbPoint();++i) {
+            linePts.push_back(point(i));
+            p3d::draw(i,point(i)+Vector3(0.01,0.01,0));
+        }
+        p3d::drawPoints(linePts);
+        p3d::drawLineStrip(linePts);
     }
-    p3d::drawPoints(linePts);
-    p3d::drawLineStrip(linePts);
-  }
 }
 
 
 
 void Curve::interactInsert(unsigned int i, const Vector3 &insertPoint) {
-  _pts.insert(_pts.begin()+i,insertPoint);
+    _pts.insert(_pts.begin()+i,insertPoint);
 }
-
-
-
-
-
-
-
-
-
-
 

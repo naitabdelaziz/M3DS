@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include "GLTool.h"
+#include "Matrix4.h"
 
 /**
 @file
@@ -20,17 +21,25 @@ using namespace std;
 **/
 Vector3 Hermite::eval(double t) {
   // initialiser la matrice 4x4 avec les valeurs correctes pour une courbe de Hermite (cf cours)
+  double x,y,z;
+  x=y=z=0.0;
+  double matrix[16]={2.0, -2.0, 1.0, 1.0,
+                     -3.0, 3.0, -2.0, -1.0,
+                     0.0, 0.0, 1.0, 0.0,
+                     1.0, 0.0, 0.0, 0.0};
 
-  double matrix[16]={1.0,0.0,0.0,0.0,
-                     0.0,1.0,0.0,0.0,
-                     0.0,0.0,1.0,0.0,
-                     0.0,0.0,0.0,1.0};
+  Matrix4 m;
+  m.set(matrix);
 
-  Vector3 res(0,0,0);
-  // A COMPLETER : calculer le point P(t) :
+  Vector4 p(t*t*t, t*t, t, 1);
+  Vector4 a = m * p;
+  Vector3 g[4] = {_a, _b, _ta, _tb};
 
+  x = a.x()*g[0].x() + a.y()*g[1].x() + a.z()*g[2].x() + a.w()*g[3].x();
+  y = a.x()*g[0].y() + a.y()*g[1].y() + a.z()*g[2].y() + a.w()*g[3].y();
+  z = a.x()*g[0].z() + a.y()*g[1].z() + a.z()*g[2].z() + a.w()*g[3].z();
 
-
+  Vector3 res(x,y,z);
   return res;
 }
 
@@ -39,10 +48,13 @@ Vector3 Hermite::eval(double t) {
 **/
 void Hermite::draw() {
     vector<Vector3> lPoints;
+    float div = 1.0/100;
 
     // A COMPLETER : calculer 100 points pour décrire la courbe de hermite
     // Il faut faire des lPoints.push_back avec les points calculés (lPoints déjà tracé à la fin de la méthode en GL_LINE_STRIP).
-
+    for (int i = 0; i <= 100; i++) {
+        lPoints.push_back(this->eval(i*div));
+    }
 
     p3d::drawThickLineStrip(lPoints);
 
