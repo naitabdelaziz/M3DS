@@ -156,8 +156,9 @@ void GLApplication::updateCamera() {
     Matrix4 frame=_roller.frame(_tAnimation);
 
     // Complétez :
-    // _camera.position(???);
-    // _camera.orientation(x ?,y ?, z?);
+    //_camera.position() = frame.column(0).xyz();
+    //_camera.orientation().set(1,
+     //                   frame.column(3));
     // sachant que frame.column(0).xyz() donne T, frame.column(1).xyz() donne B, frame.column(2).xyz() donne N et frame.column(3).xyz() donne le point de la courbe.
 
   }
