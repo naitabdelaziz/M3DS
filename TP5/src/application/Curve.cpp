@@ -63,7 +63,8 @@ Vector3 Curve::evalCubicVelocity(double t) {
     Vector3 res;
     res.set(0.0,0.0,0.0);
     for (int i = 0; i < _pts.size()-1; i++) {
-        res = res + ((t)*(_pts[i+1]-_pts[i]));
+        //res = res + ((t)*(_pts[i+1]-_pts[i]));
+        res += i*point(i)*pow(t, i);
     }
     return res;
 
