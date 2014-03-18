@@ -61,11 +61,18 @@ Vector3 Curve::evalCubicBezier(double t) {
 Vector3 Curve::evalCubicVelocity(double t) {
     if (_pts.size()!=4) throw Error("Curve should have 4 control points",__LINE__,__FILE__);
     Vector3 res;
-    res.set(0.0,0.0,0.0);
-    for (int i = 0; i < _pts.size()-1; i++) {
-        //res = res + ((t)*(_pts[i+1]-_pts[i]));
-        res += i*point(i)*pow(t, i-1);
+    float mat[16]={-1,3,-3,1,3,-6,3,0,-3,3,0,0,1,0,0,0}; // bezier matrix
+
+    vector<Vector3> q;
+    q.resize(4);
+    for(int i=0;i<4;i++) {
+        q[i].set(0,0,0);
+        for(int j=0;j<4;j++) {
+            q[i]+=mat[i*4+j]*point(j);
+        }
     }
+    res=3*t*t*q[0]+2*t*q[1]+q[2];
+
     return res;
 
 }
@@ -73,7 +80,18 @@ Vector3 Curve::evalCubicVelocity(double t) {
 Vector3 Curve::evalCubicAcceleration(double t) {
     if (_pts.size()!=4) throw Error("Curve should have 4 control points",__LINE__,__FILE__);
     Vector3 res;
-    res = 3*(1-t)*(1-t)*(_pts[1]-_pts[0])+6*(1-t)*(_pts[2]-_pts[1])+3*t*t*(_pts[3]-_pts[2]);
+    float mat[16]={-1,3,-3,1,3,-6,3,0,-3,3,0,0,1,0,0,0}; // bezier matrix
+
+    vector<Vector3> q;
+    q.resize(4);
+    for(int i=0;i<4;i++) {
+        q[i].set(0,0,0);
+        for(int j=0;j<4;j++) {
+            q[i]+=mat[i*4+j]*point(j);
+        }
+    }
+    res=6*t*q[0]+2*q[1];
+
     return res;
 
 }

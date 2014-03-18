@@ -53,7 +53,7 @@ void CatmullRomCurve::setup() {
   double k = 0.4;
 
 
-  for (int i = 1 ; i < nbPoint()-1 ; i++){
+  for (int i =  1 ; i < nbPoint()-1 ; i++){
 
       parallele = Vector3(point(i-1), point(i+1));
 intermediate(i-1,1, point(i) - (parallele/2)*k);

@@ -21,5 +21,6 @@ void main() {
   fL=lightPosition+fV;
   fN=normalMatrix*normal;
 
+
   gl_Position=mvp*vec4(position,1);
 }
