@@ -108,6 +108,7 @@ void GLApplication::initialize() {
   _earthTexture.generateMipmap();
 
   _univLille1.read("univLille1.png");
+
   _univLille1.generateMipmap();
   _univLille1.bind(1);
   _univLille1.wrap(GL_CLAMP_TO_BORDER);
