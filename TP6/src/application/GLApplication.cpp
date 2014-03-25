@@ -140,7 +140,7 @@ void GLApplication::initialize() {
 
   _rtt.create(256,256);       // création d'un Frame Buffer de 256x256 pixels
 
-  _rtt.rtt(&_depthTexture,0); // Color Buffer = _depthTexture, Depth Buffer = 0 => généré lors de l'initialisation
+  _rtt.rtt(0,&_depthTexture); // Color Buffer = _depthTexture, Depth Buffer = 0 => généré lors de l'initialisation
                               // le Color Buffer et le Depth Buffer auront les dimensions du Frame Buffer
 
   _depthTexture.wrap(GL_CLAMP_TO_BORDER);
@@ -170,6 +170,7 @@ void GLApplication::update() {
   updateCamera();
 
   _textureEyeMatrix.setIdentity();
+  _textureEyeMatrix =  Matrix4::fromFrustum(-1,1,-1,1,1,100)*_lightMatrix.inverse()*_camera.worldLocal();
 
 
   if (mouseRight()) {
@@ -249,6 +250,16 @@ void GLApplication::renderToTexture() {
   glViewport(0,0,_rtt.width(),_rtt.height()); // viewport aux dimensions du frame buffer
 
 
+  //Matrix4::fromFrustum(-1,1,-1,1,1,100)*_lightMatrix.inverse()*_camera.worldLocal();
+
+  p3d::projectionMatrix=Matrix4::fromFrustum(-1,1,-1,1,1,100);
+  p3d::modelviewMatrix=_lightMatrix.inverse();
+
+  _currentShader=&_perVertexLighting; // activer ce shader pour les tracés qui suivent
+  lightPosition();
+  drawGround();
+  drawEarth();
+  drawObject();
 
   _rtt.end(); // retour au frame buffer par défaut "normal"
 }

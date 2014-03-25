@@ -23,7 +23,7 @@ void main() {
   R = normalize(R);
 
   diffuseIntensity=max(dot(N,L),0.0);
-    specularIntensity = pow(dot(V, R),50);
+  specularIntensity = pow(dot(V, R),50);
 
   fragColor=vec4(diffuseIntensity*materialDiffuse+materialAmbient.xyz+materialSpecular*specularIntensity,materialAmbient.a);
 

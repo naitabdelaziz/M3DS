@@ -9,9 +9,12 @@ out vec4 fragColor;
 void main() {
   vec4 texCoord=fTexCoord;
   texCoord.xy/=texCoord.w;
-  texCoord.set(1-texCoord.x -((int)texCoord.x),
-               1-texCoord.y -((int)texCoord.y),
-               1-texCoord.z -((int)texCoord.z),
-               texCoord.w);
+
+
+  texCoord.xyz = (texCoord.xyz +1) /2;
+  if( fTexCoord.z >=0)
   fragColor=texture(image1,texCoord.st);
+  else {
+      fragColor = vec4(0,0,0,0);
+  }
 }

@@ -16,5 +16,6 @@ void main() {
 
   gl_Position=mvp*vec4(position,1);
 
-  fTexCoord = gl_Position;
+
+  fTexCoord=textureEyeMatrix*positionEye;
 }
