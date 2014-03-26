@@ -19,4 +19,6 @@ fragColor.r : Coordonnee z d'un point bloquant la lumiere
 
 
 
-On est arrive jusque la question 7 de l'exercice 2.
+On est arrive jusque la question 7 de l'exercice 2, nous sommes bloqué.
+
+Autrement le début du TP c'est fait plutôt rapidement et était compréhensible. Nous avons eu également des problèmes pour compiler sur nos machines personnelles. Les erreurs différaient d'une carte NVIDIA à AMD. Le probleme a ete corrige suite au mail que vous nous avez envoyé. Merci

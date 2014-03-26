@@ -52,7 +52,7 @@ LIBS+=-lglew32s
 }
 
 
-INCLUDEPATH += src/application/ src/p3d/gui/ src/p3d/scene/ src/p3d/algebra/ src/p3d/render/ 
+INCLUDEPATH += src/application/ src/p3d/gui/ src/p3d/scene/ src/p3d/algebra/ src/p3d/render/ /usr/include/GL/
 DEPENDPATH += src/application/ src/p3d/gui/ src/p3d/scene/ src/p3d/algebra/ src/p3d/render/ 
 
 SOURCES += \
