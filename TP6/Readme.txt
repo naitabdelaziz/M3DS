@@ -1,17 +1,22 @@
-FRANCOIS Remy
+﻿FRANCOIS Remy
 DOUAILLE Erwan
 
 TP6
 
-Doit contenir :
-- ce que vous avez fait.
-- ce que vous n'avez pas fait (et pourquoi).
-- difficultés rencontrées.
-- commentaires éventuels sur le TP (points à éclaircir, longueur du sujet, etc).
 
+Exercice 1 :
+
+Question 2)
+Avec l'éclairement par vertex, le sol est plus sombre car 
+l'éclairement se fait sur les sommets et le reste des pixel par interpolation lineaire. 
+Le rayon n'est pas assez étendu pour pouvoir éclairer les extremites du sol, du coup la valeur en chaque pixel du sol est la meme.
 
 Exercice 2 :
 
 Question 6)
-texCoord.z  : 
-fragColor.r : 
+texCoord.z  : Profondeur qu'a le point par rapport au repere de la source lumineuse.
+fragColor.r : Coordonnee z d'un point bloquant la lumiere
+
+
+
+On est arrive jusque la question 7 de l'exercice 2.
