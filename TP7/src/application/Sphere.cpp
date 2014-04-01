@@ -41,8 +41,16 @@ void Sphere::intersection(const Ray &ray,IntersectionArray *result) {
     // calcul de delta
     float delta = pow(b,2)-4*a*c;
     if (delta > 0){
-        result->addIntersection((-b-sqrt(delta))/2*a);
-        result->addIntersection((-b+sqrt(delta))/2*a);
+        float l1 = (-b-sqrt(delta))/(2*a);
+        float l2 = (-b+sqrt(delta))/(2*a);
+        if (l1 < l2){
+            result->addIntersection(l1);
+            result->addIntersection(l2);
+        } else {
+            result->addIntersection(l2);
+            result->addIntersection(l1);
+        }
+
     }
 
 

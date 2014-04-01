@@ -84,12 +84,22 @@ Vector3 Raytrace::computeLocalColor(const Intersection &intersection) {
   Vector3 N;
   Vector3 V;
   N=intersection.normal();
-  P=intersection.point();
-  // V= ?, L=?
+  P=intersection.point();  
+  V = Vector3(0,0,0);
+
+  N.normalize();
+  double diffuseIntensity = 0;
+  Vector3 result = Vector3(0,0,0);
+
   Material m=intersection.node()->primitive()->material();
+  for (int i = 0 ; i < _scene->nbLight() ; i++){
+      L = _scene->lightPosition(i) - P;
+      L.normalize();
+      diffuseIntensity = max(L.dot(N),0.0);
+      result += diffuseIntensity*m.diffuse();
+  }
 
 
-  Vector3 result=Vector3(1,1,1); // =m.ambient();
 
 
 
