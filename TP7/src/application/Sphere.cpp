@@ -23,7 +23,7 @@ void Sphere::intersection(const Ray &ray,IntersectionArray *result) {
 
   /**
    * A COMPLETER : il faut résoudre l'équation en lambda, puis créer dans le résultat les intersections correspondantes aux lambda  :
-   * !! pour ajouter une intersection à la fin de la liste result, utilisez uniquement : result->addIntersection(lambda)
+   * !! pour ajouter une intersection à la fin: de la liste result, utilisez uniquement : result->addIntersection(lambda)
    * ray est déjà dans le repère local de la sphere unitaire centrée à l'origine :
    *   - ray.point() : donne l'origine du rayon (Vector3)
    *   - ray.direction() : donne le vecteur directeur (Vector3)
@@ -32,8 +32,21 @@ void Sphere::intersection(const Ray &ray,IntersectionArray *result) {
    *
    *  rappel : a.dot(b) donne le produit scalaire de a par b
    */
+    result->clear(); // initialisation : liste d'intersection vide
 
-  result->clear(); // initialisation : liste d'intersection vide
+
+    float a = ray.direction().dot(ray.direction());
+    float b = 2.0 * ray.direction().dot(ray.point());
+    float c = ray.point().dot(ray.point())-1;
+    // calcul de delta
+    float delta = pow(b,2)-4*a*c;
+    if (delta > 0){
+        result->addIntersection((-b-sqrt(delta))/2*a);
+        result->addIntersection((-b+sqrt(delta))/2*a);
+    }
+
+
+
 
 
 
