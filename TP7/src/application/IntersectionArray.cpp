@@ -38,7 +38,57 @@ void IntersectionArray::fusion(IntersectionArray &gauche,IntersectionArray &droi
     * Attention !!!!!! Faire un delete sur une intersection qui n'est pas retenue dans le résultat : par exemple delete gauche[iG]
     */
   this->clear(); // initialisation de la fusion
-  // while(....)
+
+  // on récupère la taille des listes
+  unsigned int left_size = gauche.size();
+  unsigned int right_size = droite.size();
+
+  Intersection *currentIntersection;
+
+  while(iG < left_size || iD < right_size){
+      // si la liste de gauche est fini
+     if (iG >= left_size) {
+         currentIntersection = droite[iD];
+         eD = !eD;
+         iD++;
+     }
+     // si la liste de droite est fini
+     else if (iD >= right_size)
+     {
+         currentIntersection = gauche[iG];
+         eG = !eG;
+         iG++;
+     }
+
+     // si aucune des listes n'est fini
+     else
+     {
+         // si la valeur de G est < à D
+         if (gauche[iG]->lambda() < droite[iD]->lambda()) {
+             currentIntersection = gauche[iG];
+             eG = !eG;
+             iG++;
+         }
+         // si la valeur de D est < à G
+         else
+         {
+             currentIntersection = droite[iD];
+             eD = !eD;
+             iD++;
+         }
+     }
+
+     // on récupère l'état en fonction de l'operateur
+     if (op == CsgTree::Node_Intersection) ePN = (eG && eD);
+     if (op == CsgTree::Node_Union) ePN = (eG || eD);
+     if (op == CsgTree::Node_Difference) ePN = (eG && !eD);
+
+     // si changement d'état on ajoute le plus petit
+     if (ePN != eN) {
+         this->push_back(currentIntersection);
+         eN = ePN;
+     }
+  }
 
 
 

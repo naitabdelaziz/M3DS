@@ -1,8 +1,5 @@
-Nom1 Prénom1
-Nom2 Prénom2
+FRANCOIS Remy
+DOUAILLE Erwan
 
-Doit contenir :
-- ce que vous avez fait.
-- ce que vous n'avez pas fait (et pourquoi).
-- difficultés rencontrées.
-- commentaires éventuels sur le TP (points à éclaircir, longueur du sujet, etc). 
+
+On a tout fait, par contre on a eu des difficultés sur les 2 premières questions du TP.
