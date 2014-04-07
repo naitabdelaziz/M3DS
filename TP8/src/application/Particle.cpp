@@ -33,7 +33,7 @@ double randUnit() {
 /** Données initiales d'une particule
 **/
 void Particle::initRandom() {
-
+    // avant la chute des particules, backup au cas ou :)
     //  this->position(Vector3(randDouble(-1,1),randDouble(-1,1),0));
     //  this->velocity(2.0*Vector3(randDouble(-1,1),randDouble(0,5),randDouble(-1,1)));
 

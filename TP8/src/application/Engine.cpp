@@ -22,7 +22,6 @@ using namespace p3d;
 ** - p->velocity() donne la vitesse actuelle (de type Vector3) et p->velocity(unVector3) affecte la vitesse de p
 ** - p->force() donne la somme des forces s'appliquant sur la particule p (de type Vector3 et calculée lors de la boucle principale).
 ** - p->mass() donne la masse de la particule
-
 ** Il s'agit ici d'affecter la nouvelle position et la nouvelle vitesse en appliquant l'intégration d'Euler (cf cours).
 
 **/
@@ -34,7 +33,6 @@ void Engine::euler(double dt) {
       */
             p->position(p->position()+p->velocity()*dt);
             p->velocity(p->velocity()+(p->force()/p->mass())*dt);
-
         }
     }
 }
@@ -73,10 +71,9 @@ void Engine::collisionPlane() {
             if (p->alive()) {
                 Vector3 posCorrection(0,0,0); // correction en position à calculer si collision
                 Vector3 velCorrection(0,0,0); // correction en vitesse à calculer si collision
-
-                if(((p->position()-plane->point()).dot(plane->normal()))<=0) {
-                    posCorrection = ((1.2) * (plane->project(p->position()) - p->position()));
-                    velCorrection = -((1.2) * p->velocity().dot(plane->normal()))*plane->normal();
+                if((((p->position()-Vector3(0,p->radius(),0))-plane->point()).dot(plane->normal()))<=0) {
+                    posCorrection = ((1.5) * (plane->project(p->position()) - (p->position() -Vector3(0,p->radius(),0))));
+                    velCorrection = -((1.5) * p->velocity().dot(plane->normal()))*plane->normal();
                 }
                 p->addPositionCorrec(posCorrection);
                 p->addVelocityCorrec(velCorrection);
@@ -117,8 +114,18 @@ void Engine::interCollision() {
                     Vector3 posCorrectionP2(0,0,0); // correction en position de P2
                     Vector3 velCorrectionP2(0,0,0); // correction en vitesse de P2
 
-                    /* A COMPLETER */
+                    if(p1->position().distance(p2->position()) < p1->radius()+p2->radius()){
+                        //double d = p1->position().distance(p2->position()) - p1->radius()-p2->radius();
+                        double d = (p1->position()-p2->position()).length() -p1->radius() - p2->radius();
+                        Vector3 n = p2->position()-p1->position();
 
+                        posCorrectionP1 = (1.1) * (p2->mass()/(p1->mass()+p2->mass()))*d*(n/n.dot(n));
+                        velCorrectionP1 = -(computeImpulse(p1,p2,n,1.2)/p1->mass())*n;
+
+                        posCorrectionP2 = -(1.1) * (p1->mass()/(p2->mass()+p1->mass()))*d*(n/n.dot(n));
+                        velCorrectionP2 = (computeImpulse(p1,p2,n,1.2)/p2->mass())*n;
+
+                    }
 
                     // appliquer la correction éventuelle :
                     p1->addPositionCorrec(posCorrectionP1);
