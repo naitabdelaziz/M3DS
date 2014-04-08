@@ -25,9 +25,8 @@ using namespace std;
 void EngineBox::computeForce() {
   for(unsigned int i=0; i<_boxList->size(); i++) {
     Box *b=_boxList->at(i);
-
-// A compléter
-
+    Vector3 a(0,b->mass()*-9.8,0);
+    b->addForce(a);
   }
 
 
@@ -106,7 +105,8 @@ void EngineBox::euler(double dt) {
     b->position(b->position()+dt*b->velocity());
     b->velocity(b->velocity()+dt*b->force()/b->mass());
     // à compléter
-
+    b->omega();
+    b->theta();
 
     // à laisser en fin :
     b->resetForce();
