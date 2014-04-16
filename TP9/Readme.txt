@@ -1,8 +1,6 @@
-Nom1 Prénom1
-Nom2 Prénom2
+Douaille Erwan
+Francois Remy
 
-Doit contenir :
-- ce que vous avez fait.
-- ce que vous n'avez pas fait (et pourquoi).
-- difficultés rencontrées.
-- commentaires éventuels sur le TP (points à éclaircir, longueur du sujet, etc). 
+Nous avons bloqué sur l'avant dernière question. Nous avons bien complété comme indiqué dans l'énoncé mais le résultat n'est pas la. La détection de collision fonctionne mais n'est pas opérationelle
+
+Autrement l'ensemble du sujet a été clairement compris :)

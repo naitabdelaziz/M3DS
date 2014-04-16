@@ -40,26 +40,67 @@ void EngineBox::computeForce() {
 /** Gère la collision entre toutes les boites
 **/
 void EngineBox::interCollision() {
-    for(unsigned int i=0; i<_boxList->size(); i++) {
-        Box *b1=(*_boxList)[i];
-        for(unsigned int j=i+1; j<_boxList->size(); j++) {
-            Box *b2=(*_boxList)[j];
+  for(unsigned int i=0; i<_boxList->size(); i++) {
+    Box *b1=(*_boxList)[i];
+    for(unsigned int j=i+1; j<_boxList->size(); j++) {
+      Box *b2=(*_boxList)[j];
 
-            CollisionInfo collisionInfo;
-            bool collide=Box::detectCollision(b1,b2,&collisionInfo);
-            if (collide) {
-                b1->enableVisualEffect(1);
-                b2->enableVisualEffect(1);
-            }
-            else {
-                b1->disableVisualEffect(1); // pas d'effet visuel de détection de collision
-                b2->disableVisualEffect(1);
-            }
+      CollisionInfo collisionInfo;
+      bool collide=Box::detectCollision(b1,b2,&collisionInfo);
+      if (collide) {
+        b1->enableVisualEffect(1);
+        b2->enableVisualEffect(1); // sert uniquement à faire un retour visuel de collision.
 
-        }
+
+         // début Réponse à la collision :
+
+        // décomposition du calcul : normal, vP1_old : vitesse du point de contact par rapport à b1, r1xN : produit vectoriel PG x normal, etc
+        Vector3 normal=collisionInfo.axis();
+        normal.normalize();
+        Vector3 r1=(b1->position()-collisionInfo.applicationPoint());
+        Vector3 vP1_old=b1->velocity()+r1.cross(b1->omega());
+
+        Vector3 r2=(b2->position()-collisionInfo.applicationPoint());
+        Vector3 vP2_old=b2->velocity()+r2.cross(b2->omega());
+
+        Vector3 r1xN=-r1.cross(normal);
+        Vector3 r2xN=-r2.cross(normal);
+
+        // calcul de l'impulsion.
+        double impulseNum;
+        double impulseDen;
+
+        impulseNum=-(1+0.5)*(normal.dot(b1->velocity()-b2->velocity())+b1->omega().dot(r1xN)-b2->omega().dot(r2xN));
+        impulseDen=1.0/b1->mass()+1.0/b2->mass()+1.0/b1->inertia()*r1xN.dot(r1xN)+1.0/b2->inertia()*r2xN.dot(r2xN);
+
+        double impulse=impulseNum/impulseDen;
+
+        // calcul de la force d'impulsion
+        Vector3 force=impulse*normal;
+
+        // correction du mouvement :
+        // - on corrige la vitesse angulaire et la vitesse des boites
+        // - on corrige la position (car on répond à une position en recouvrement).
+        b1->addVelocityCorrec(force/b1->mass());
+        b1->addOmegaCorrec(force.cross(r1)/b1->inertia());
+
+        b2->addVelocityCorrec(-force/b2->mass());
+        b2->addOmegaCorrec(-force.cross(r2)/b2->inertia());
+
+        b1->addPositionCorrec(collisionInfo.axis()*collisionInfo.mtd());
+        b2->addPositionCorrec(-collisionInfo.axis()*collisionInfo.mtd());
+         // fin réponse à la collision
+
+
+      }
+      else {
+        b1->disableVisualEffect(1); // pas d'effet visuel de détection de collision
+        b2->disableVisualEffect(1);
+      }
+
     }
+  }
 }
-
 /** Intégration Euler
 **/
 void EngineBox::euler(double dt) {
