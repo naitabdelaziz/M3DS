@@ -216,7 +216,7 @@ void GLApplication::moveSelectedObject() {
             mesh->pointTo(Coordinate_Local,_attachPointWorld);
             mesh->directionTo(Coordinate_World,Vector3(dx,dy,0));
 
-            mesh->translate(mesh->, Coordinate_World);
+            mesh->translate(dx,dy,0,Coordinate_Local);
             if (_controlMouse==Manipulation_Translation) {
 
             }
