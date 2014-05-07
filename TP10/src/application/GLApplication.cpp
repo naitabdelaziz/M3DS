@@ -189,21 +189,21 @@ void GLApplication::selectObject() {
     }
     if (mouseRightPressed()) {
 
-        _sceneIntersection.intersect({&_triangle},_pickingRay);
+        _sceneIntersection.intersect({&_triangle,&_triceratops,&_cow},_pickingRay);
 
-    if (_sceneIntersection.size()>0) {
+        if (_sceneIntersection.size()>0) {
 
-        testIntersection(); // comment this line once intersection is ok
+            testIntersection(); // comment this line once intersection is ok
 
-        _selectedIntersection=_sceneIntersection[0]; // the first intersection is the nearest (from the camera)
+            _selectedIntersection=_sceneIntersection[0]; // the first intersection is the nearest (from the camera)
 
-        // save the intersection point coordinates (useful for interaction) :
-        _attachPointWorld=_selectedIntersection->rayWorld().point(_selectedIntersection->lambda());
+            // save the intersection point coordinates (useful for interaction) :
+            _attachPointWorld=_selectedIntersection->rayWorld().point(_selectedIntersection->lambda());
+        }
+        else {
+            _selectedIntersection=0; // no intersection
+        }
     }
-    else {
-        _selectedIntersection=0; // no intersection
-    }
-}
 }
 
 void GLApplication::moveSelectedObject() {
@@ -212,7 +212,10 @@ void GLApplication::moveSelectedObject() {
             MeshObject3D *mesh=_selectedIntersection->mesh(); // selected mesh
 
             double dx=double(deltaMouseX())/100.0,dy=double(deltaMouseY())/100.0; // /20.0 to attenuate mouse motion
+            mesh->pointTo(Coordinate_Local,_attachPointWorld);
+            mesh->directionTo(Coordinate_World,_attachPointWorld);
 
+            mesh->translate(dx,dy,0,Coordinate_World);
             if (_controlMouse==Manipulation_Translation) {
 
             }

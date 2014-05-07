@@ -56,7 +56,39 @@ bool SceneIntersection::intersect(const Line &ray,const Vector3 &s0,const Vector
     bool res=false;
     double lambda=0.0;
 
+    Vector3 e1, e2;
+    Vector3 P,Q,T;
+    float det, inv_det, u, v;
+    float t;
 
+    e1 = s1 - s0;
+    e2 = s2 - s0;
+
+    P = cross(ray.direction(),e2);
+    det = e1.dot(P);
+
+    // pas de selection
+    if(det == 0) return res;
+    inv_det = 1.f / det;
+
+    // distance s0 -> origine
+    T = ray.point() - s0;
+    u = T.dot(P) * inv_det;
+    // intersection en dehors du triangle
+    if (u < 0.f || u > 1.f) return res;
+
+    Q = cross(T, e1);
+    v = ray.direction().dot(Q) * inv_det;
+
+    //intersection en dehors du triangle
+    if (v < 0.f || u+v > 1.f) return res;
+
+    t = e2.dot(Q) * inv_det;
+
+    if (t > 0){
+        lambda = t;
+        res = true;
+    }
 
     *lambdaRes=lambda;
     return res;
