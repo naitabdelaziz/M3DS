@@ -212,10 +212,11 @@ void GLApplication::moveSelectedObject() {
             MeshObject3D *mesh=_selectedIntersection->mesh(); // selected mesh
 
             double dx=double(deltaMouseX())/100.0,dy=double(deltaMouseY())/100.0; // /20.0 to attenuate mouse motion
+            // Merche pas :(
             mesh->pointTo(Coordinate_Local,_attachPointWorld);
-            mesh->directionTo(Coordinate_World,_attachPointWorld);
+            mesh->directionTo(Coordinate_World,Vector3(dx,dy,0));
 
-            mesh->translate(dx,dy,0,Coordinate_World);
+            mesh->translate(mesh->, Coordinate_World);
             if (_controlMouse==Manipulation_Translation) {
 
             }
