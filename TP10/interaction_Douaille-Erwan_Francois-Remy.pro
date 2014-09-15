@@ -115,7 +115,10 @@ HEADERS += \
 	src/p3d/scene/MeshGL.h \
 	src/p3d/scene/Mesh.h \
 	src/p3d/gui/GLWidget.h \
-	src/p3d/gui/MainWindow.h
+	src/p3d/gui/MainWindow.h \
+    ../../../Informatique/Librairies/C++/glew-1.10.0/include/GL/glew.h \
+    ../../../Informatique/Librairies/C++/glew-1.10.0/include/GL/glxew.h \
+    ../../../Informatique/Librairies/C++/glew-1.10.0/include/GL/wglew.h
 OTHER_FILES +=\
 	media/mosaic_pierre.jpg\
 	media/cow.obj\

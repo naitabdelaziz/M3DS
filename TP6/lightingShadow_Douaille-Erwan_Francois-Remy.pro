@@ -129,3 +129,24 @@ OTHER_FILES +=\
 	media/shader/textureTransform.vert\
 	media/porsche.obj\
 	media/cessna.obj
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32d
+else:unix: LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32
+
+INCLUDEPATH += $$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/include
+DEPENDPATH += $$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32s
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32sd
+else:unix: LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32s
+
+INCLUDEPATH += $$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/include
+DEPENDPATH += $$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32d
+else:unix: LIBS += -L$$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/lib/ -lglew32
+
+INCLUDEPATH += $$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/include
+DEPENDPATH += $$PWD/../../../../../../Qt/Qt5.2.1/5.2.1/msvc2012_64_opengl/include
